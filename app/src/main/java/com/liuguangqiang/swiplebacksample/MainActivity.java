@@ -1,12 +1,13 @@
 package com.liuguangqiang.swiplebacksample;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends ActionBarActivity implements View.OnClickListener {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button btnCommon;
     private Button btnListView;

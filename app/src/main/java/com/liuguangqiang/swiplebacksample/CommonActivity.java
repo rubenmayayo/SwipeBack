@@ -2,7 +2,7 @@ package com.liuguangqiang.swiplebacksample;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 
 import com.liuguangqiang.swipeback.SwipeBackActivity;
 import com.liuguangqiang.swipeback.SwipeBackLayout;
