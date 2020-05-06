@@ -18,6 +18,9 @@ package com.liuguangqiang.swipeback;
 
 import android.app.Activity;
 import android.content.Context;
+
+import androidx.annotation.AnimRes;
+import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 import androidx.customview.widget.ViewDragHelper;
 import androidx.viewpager.widget.ViewPager;
@@ -81,7 +84,12 @@ public class SwipeBackLayout extends ViewGroup {
         }
     }
 
-    private static final double AUTO_FINISHED_SPEED_LIMIT = 2000.0;
+    //private static final double AUTO_FINISHED_SPEED_LIMIT = 2000.0;
+    private double autoFinishedSpeedLimit = 2000.0;
+
+    public void setAutoFinishedSpeedLimit(double autoFinishedSpeedLimit) {
+        this.autoFinishedSpeedLimit = autoFinishedSpeedLimit;
+    }
 
     private ViewDragHelper viewDragHelper;
 
@@ -102,7 +110,29 @@ public class SwipeBackLayout extends ViewGroup {
      */
     private boolean enablePullToBack = true;
 
-    private static final float BACK_FACTOR = 0.5f;
+    //private static final float BACK_FACTOR = 0.3f;
+    private float backFactor = 0.3f;
+
+    /**
+     * Set the back factor to call finish
+     *
+     * @param backFactor
+     */
+    public void setBackFactor(float backFactor) {
+        this.backFactor = backFactor;
+    }
+
+    @AnimRes
+    private int finishAnimation = android.R.anim.fade_out;
+
+    /**
+     * Set the finish animation
+     *
+     * @param finishAnimation
+     */
+    public void setFinishAnimation(@AnimRes int finishAnimation) {
+        this.finishAnimation = finishAnimation;
+    }
 
     /**
      * the anchor of calling finish.
@@ -289,11 +319,11 @@ public class SwipeBackLayout extends ViewGroup {
         switch (dragEdge) {
             case TOP:
             case BOTTOM:
-                finishAnchor = finishAnchor > 0 ? finishAnchor : verticalDragRange * BACK_FACTOR;
+                finishAnchor = finishAnchor > 0 ? finishAnchor : verticalDragRange * backFactor;
                 break;
             case LEFT:
             case RIGHT:
-                finishAnchor = finishAnchor > 0 ? finishAnchor : horizontalDragRange * BACK_FACTOR;
+                finishAnchor = finishAnchor > 0 ? finishAnchor : horizontalDragRange * backFactor;
                 break;
         }
     }
@@ -316,7 +346,16 @@ public class SwipeBackLayout extends ViewGroup {
         boolean handled = false;
         ensureTarget();
         if (isEnabled()) {
-            handled = viewDragHelper.shouldInterceptTouchEvent(ev);
+
+//            java.lang.ArrayIndexOutOfBoundsException: length=1; index=1
+//            at android.support.v4.widget.ViewDragHelper.saveLastMotion(ViewDragHelper.java:849)
+            try {
+                handled = viewDragHelper.shouldInterceptTouchEvent(ev);
+            } catch (Exception e) {
+                //e.printStackTrace();
+                handled = false;
+            }
+
         } else {
             viewDragHelper.cancel();
         }
@@ -325,7 +364,13 @@ public class SwipeBackLayout extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        viewDragHelper.processTouchEvent(event);
+//            java.lang.ArrayIndexOutOfBoundsException: length=1; index=1
+//            at android.support.v4.widget.ViewDragHelper.saveLastMotion(ViewDragHelper.java:849)
+        try {
+            viewDragHelper.processTouchEvent(event);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
@@ -355,7 +400,7 @@ public class SwipeBackLayout extends ViewGroup {
     private void finish() {
         Activity act = (Activity) getContext();
         act.finish();
-        act.overridePendingTransition(0, android.R.anim.fade_out);
+        act.overridePendingTransition(0, finishAnimation);
     }
 
     private class ViewDragHelperCallBack extends ViewDragHelper.Callback {
@@ -527,13 +572,13 @@ public class SwipeBackLayout extends ViewGroup {
         switch (dragEdge) {
             case TOP:
             case BOTTOM:
-                if (Math.abs(yvel) > Math.abs(xvel) && Math.abs(yvel) > AUTO_FINISHED_SPEED_LIMIT) {
+                if (Math.abs(yvel) > Math.abs(xvel) && Math.abs(yvel) > autoFinishedSpeedLimit) {
                     return dragEdge == DragEdge.TOP ? !canChildScrollUp() : !canChildScrollDown();
                 }
                 break;
             case LEFT:
             case RIGHT:
-                if (Math.abs(xvel) > Math.abs(yvel) && Math.abs(xvel) > AUTO_FINISHED_SPEED_LIMIT) {
+                if (Math.abs(xvel) > Math.abs(yvel) && Math.abs(xvel) > autoFinishedSpeedLimit) {
                     return dragEdge == DragEdge.LEFT ? !canChildScrollLeft() : !canChildScrollRight();
                 }
                 break;
