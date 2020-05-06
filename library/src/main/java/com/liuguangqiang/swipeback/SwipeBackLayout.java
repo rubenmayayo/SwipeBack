@@ -20,13 +20,11 @@ import android.app.Activity;
 import android.content.Context;
 
 import androidx.annotation.AnimRes;
-import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 import androidx.customview.widget.ViewDragHelper;
 import androidx.viewpager.widget.ViewPager;
 
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -238,7 +236,6 @@ public class SwipeBackLayout extends ViewGroup {
 
     public void setEnablePullToBack(boolean b) {
         enablePullToBack = b;
-        Log.i(TAG, "enablePullToBack:" + enablePullToBack);
     }
 
     private void ensureTarget() {
