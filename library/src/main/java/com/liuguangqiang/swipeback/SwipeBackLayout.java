@@ -132,6 +132,17 @@ public class SwipeBackLayout extends ViewGroup {
         this.finishAnimation = finishAnimation;
     }
 
+    private float sensitivity = 1.0f;
+
+    /**
+     * Set the drag sensitivity
+     *
+     * @param sensitivity
+     */
+    public void setSensitivity(float sensitivity) {
+        this.sensitivity = sensitivity;
+    }
+
     /**
      * the anchor of calling finish.
      */
@@ -175,7 +186,7 @@ public class SwipeBackLayout extends ViewGroup {
     public SwipeBackLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        viewDragHelper = ViewDragHelper.create(this, 1.0f, new ViewDragHelperCallBack());
+        viewDragHelper = ViewDragHelper.create(this, sensitivity, new ViewDragHelperCallBack());
         chkDragable();
     }
 
@@ -185,7 +196,7 @@ public class SwipeBackLayout extends ViewGroup {
      * @param onFinishListener listener for what to do when view reach the end
      */
     public void setOnFinishListener(OnFinishListener onFinishListener ) {
-        viewDragHelper = ViewDragHelper.create(this, 1.0f, new ViewDragHelperCallBack(onFinishListener));
+        viewDragHelper = ViewDragHelper.create(this, sensitivity, new ViewDragHelperCallBack(onFinishListener));
     }
 
     float lastY = 0;
